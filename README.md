@@ -11,15 +11,30 @@ pragma circom 2.0.0;
 /*This circuit template checks that c is the multiplication of a and b.*/  
 
 template Multiplier2 () {  
+   signal input A_start;
+   signal input B_start;
 
-   // Declaration of signals.  
-   signal input a;  
-   signal input b;  
-   signal output c;  
+   signal X_mid;
+   signal Y_mid;
+   signal output Q_end;
 
-   // Constraints.  
-   c <== a * b;  
+   component and->gate=AND();
+   component or->gate=OR();
+   component not->gate=NOT();
+
+   and->gate.a <== A_start ;
+   and->gate.b <== B_start ;
+   X_mid <== and->gate.out ;
+
+   not->gate.in <== B_start ;
+   Y_mid <== not->gate.out;
+
+   or->gate.a <== X_mid;
+   or->gate.b <== Y_mid;
+   Q_end_end <== or->gate.out;
+
 }
+
 component main = Multiplier2();
 ```
 ### Install
@@ -103,3 +118,10 @@ npx hardhat newcircuit --name newcircuit
 **determinism**
 > When you recompile the same circuit using the groth16 protocol, even with no changes, this plugin will apply a new final beacon, changing all the zkey output files. This also causes your Verifier contracts to be updated.
 > For development builds of groth16 circuits, we provide the --deterministic flag in order to use a NON-RANDOM and UNSECURE hardcoded entropy (0x000000 by default) which will allow you to more easily inspect and catch changes in your circuits. You can adjust this default beacon by setting the beacon property on a circuit's config in your hardhat.config.js file.
+
+
+## Authors
+
+Ajay SS
+
+[0j0y1512@gmail.com]
